@@ -6,4 +6,6 @@ import pard.server.com.portfolioarchiveback.portfolio.Portfolio;
 
 @Repository
 public interface DescriptionRepository extends JpaRepository<Description, Long> {
+
+    void deleteAllByUserId(Long userId);
 }
