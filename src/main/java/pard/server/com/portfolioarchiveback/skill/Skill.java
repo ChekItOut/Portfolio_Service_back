@@ -1,4 +1,4 @@
-package pard.server.com.portfolioarchiveback.description;
+package pard.server.com.portfolioarchiveback.skill;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -7,12 +7,12 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class Description {
+public class Skill {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long descriptionId;
+    private Long skillId;
 
     private Long portfolioId;
 
-    private String context;
+    private String skillName;
 }
