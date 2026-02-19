@@ -13,7 +13,7 @@ public class User extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long userId;
 
-    private String userName;
+    private String name;
 
-    private String userEmail;
+    private String email;
 }
