@@ -1,4 +1,4 @@
-package pard.server.com.portfolioarchiveback.user;
+package pard.server.com.portfolioarchiveback.portfolio;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -7,12 +7,12 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class User {
+public class Portfolio {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long portfolioId;
+
     private Long userId;
 
-    private String userName;
-
-    private String userEmail;
+    private String title;
 }
