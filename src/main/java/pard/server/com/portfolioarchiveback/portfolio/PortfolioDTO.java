@@ -16,7 +16,6 @@ public class PortfolioDTO {
         private String title;
         private List<String> description;
         private List<String> skill;
-        private List<MultipartFile> image;
     }
 
     @AllArgsConstructor

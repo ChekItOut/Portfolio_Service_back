@@ -41,7 +41,7 @@ public class PortfolioController {
         Long portfolioId = portfolioService.createPortfolio(myId, request.getTitle()); //포폴 생성
         descriptionService.save(portfolioId, request.getDescription()); //설명글 저장
         skillService.save(portfolioId, request.getSkill()); //스킬 저장
-        imageService.uploadImage(portfolioId, request.getImage()); //사진들 업로드
+        imageService.uploadImage(portfolioId, images); //사진들 업로드
 
         return ResponseEntity.ok().build();
     }

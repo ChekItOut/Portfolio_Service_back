@@ -44,6 +44,9 @@ public class WebOAuthSecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         //✅ RequestMatcher를 PathPattern 기반으로 통일 (최신 권장)
         var apiToken = PathPatternRequestMatcher.withDefaults().matcher("/api/token");
+        var swaggerUi = PathPatternRequestMatcher.withDefaults().matcher("/swagger-ui/**");
+        var swaggerHtml = PathPatternRequestMatcher.withDefaults().matcher("/swagger-ui.html");
+        var apiDocs = PathPatternRequestMatcher.withDefaults().matcher("/v3/api-docs/**");
 
         return http //토큰 방식으로 인증하기 때문에 기존 폼 로그인, 세션 기능을 비활성화
                 .csrf(AbstractHttpConfigurer::disable)
@@ -67,6 +70,7 @@ public class WebOAuthSecurityConfig {
                         .requestMatchers("/error").permitAll()
                         // ✅ 2) “로그인 없이 허용”하려는 API들
                         .requestMatchers(apiToken).permitAll()
+                        .requestMatchers(swaggerUi, swaggerHtml, apiDocs).permitAll() //스웨거 허용
                         // ✅ 3) 그 외 전부 인증 필요
                         .anyRequest().authenticated()
                 )
