@@ -50,7 +50,8 @@ public class PortfolioService {
     }
 
     public PortfolioDTO.Res2 getPortfolioDetail(Long portfolioId) { //포폴 상세페이지 정보리턴
-        Portfolio portfolio = portfolioRepository.findById(portfolioId).orElse(null);
+        Portfolio portfolio = portfolioRepository.findById(portfolioId)
+                .orElseThrow(() -> new RuntimeException("Portfolio not found with id: " + portfolioId));
 
         List<Skill> skillList = skillRepository.findAllByPortfolioId(portfolioId);
         List<String> skillNameList = skillList.stream()
@@ -79,7 +80,8 @@ public class PortfolioService {
 
     @Transactional
     public void updatePortfolioText(Long portfolioId, PortfolioDTO.Req2 request) {
-        Portfolio portfolio = portfolioRepository.findById(portfolioId).orElse(null);
+        Portfolio portfolio = portfolioRepository.findById(portfolioId)
+                .orElseThrow(() -> new RuntimeException("Portfolio not found with id: " + portfolioId));
         portfolio.updateTitle(request.getTitle()); //제목 수정
 
         descriptionService.deleteAll(portfolioId); //기존 포폴의 설명글 모두 삭제

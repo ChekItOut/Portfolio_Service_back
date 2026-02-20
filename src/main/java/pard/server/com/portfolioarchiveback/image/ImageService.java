@@ -36,7 +36,8 @@ public class ImageService {
     }
 
     public String getThumbURL(Long portfolioId) {
-        Image image = imageRepository.findByPortfolioIdAndIsThumbnail(portfolioId, true);
+        Image image = imageRepository.findByPortfolioIdAndIsThumbnail(portfolioId, true)
+                .orElseThrow(() -> new RuntimeException("Thumbnail image not found for portfolio id: " + portfolioId));
 
         return awsS3Service.getFileUrl(image.getFileName());
     }
