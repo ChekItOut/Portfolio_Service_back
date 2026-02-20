@@ -43,6 +43,26 @@ public class ImageService {
 
     @Transactional
     public void deleteImage(Long portfolioId) {
-        imageRepository.deleteByPortfolioId(portfolioId);
+        List<Image> imageList = imageRepository.findAllByPortfolioId(portfolioId);
+        imageList.forEach(image -> { //s3에서 모든 파일 삭제
+            awsS3Service.deleteFile(image.getFileName());
+        });
+        imageRepository.deleteByPortfolioId(portfolioId); //DB에서 유지중인 모든 file이름 정보 삭제
+    }
+
+    public void addImage(Long portfolioId, List<MultipartFile> imageList) {
+        for(int i = 0; i < imageList.size(); i++) {
+            MultipartFile file = imageList.get(i);
+            if(file.isEmpty()) continue;
+
+            String fileName = awsS3Service.uploadFile(file); // s3에 파일 업로드 후 파일 이름 리턴 받음
+
+            Image image = Image.builder()
+                    .fileName(fileName)
+                    .isThumbnail(false) //썸네일이 아니니 false로 설정
+                    .portfolioId(portfolioId)
+                    .build();
+            imageRepository.save(image);
+        }
     }
 }

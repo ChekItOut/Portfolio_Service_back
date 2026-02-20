@@ -54,13 +54,16 @@ public class PortfolioController {
 
     @PatchMapping(value="/imageReorder/{portfolioId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE) // 포트폴리오 수정에서 사진 정보만 수정했을 때 (순서가 바뀌었을 때)
     public ResponseEntity<Void> updatePortfolioImageReorder(@PathVariable Long portfolioId, @RequestPart("images") List<MultipartFile> images) {
-
+        imageService.deleteImage(portfolioId); // 기존 사진들 모두 삭제
+        imageService.uploadImage(portfolioId, images); //사진 다시 업로드
+        return ResponseEntity.ok().build();
     }
 
     // 포트폴리오 수정에서 사진 정보만 수정했을 때 (기존 사진 그대로에 새로운 사진 추가했을때)
     @PostMapping(value="/imageAdd/{portfolioId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<Void> updatePortfolioImageAdd(@PathVariable Long portfolioId, @RequestPart("images") List<MultipartFile> images) {
-
+        imageService.addImage(portfolioId, images); //사진 추가
+        return ResponseEntity.ok().build();
     }
 
 
