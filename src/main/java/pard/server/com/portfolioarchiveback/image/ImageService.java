@@ -39,6 +39,5 @@ public class ImageService {
         Image image = imageRepository.findByPortfolioIdAndIsThumbnail(portfolioId, true);
 
         return awsS3Service.getFileUrl(image.getFileName());
-
     }
 }

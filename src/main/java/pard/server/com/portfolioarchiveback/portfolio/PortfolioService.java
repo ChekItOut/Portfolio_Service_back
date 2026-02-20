@@ -2,9 +2,14 @@ package pard.server.com.portfolioarchiveback.portfolio;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import jakarta.transaction.Transactional;
+import pard.server.com.portfolioarchiveback.description.Description;
 import pard.server.com.portfolioarchiveback.description.DescriptionRepository;
+import pard.server.com.portfolioarchiveback.image.Image;
 import pard.server.com.portfolioarchiveback.image.ImageRepository;
 import pard.server.com.portfolioarchiveback.image.ImageService;
+import pard.server.com.portfolioarchiveback.s3.AwsS3Service;
+import pard.server.com.portfolioarchiveback.skill.Skill;
+import pard.server.com.portfolioarchiveback.skill.SkillRepository;
 
 import java.util.List;
 
@@ -13,12 +18,17 @@ import java.util.List;
 public class PortfolioService {
     private final PortfolioRepository portfolioRepository;
     private final ImageService imageService;
+    private final SkillRepository skillRepository;
+    private final DescriptionRepository descriptionRepository;
+    private final ImageRepository imageRepository;
+    private final AwsS3Service awsS3Service;
 
-    public List<PortfolioDTO.Res1> getPortfolio(Long userId) { //히어로섹션 갤러리들 모두 리턴
+    public List<PortfolioDTO.Res1> getPortfolios(Long userId) { //히어로섹션 갤러리들 모두 리턴
         List<Portfolio> portfolios = portfolioRepository.findAllByUserId(userId);
 
         return portfolios.stream().map(portfolio ->
                 PortfolioDTO.Res1.builder()
+                        .portfolioId(portfolio.getPortfolioId())
                         .imageURL(imageService.getThumbURL(portfolio.getPortfolioId())) //해당 포폴의 썸네일 추출
                         .title(portfolio.getTitle()) //제목 추출
                         .build())
@@ -33,5 +43,34 @@ public class PortfolioService {
         portfolioRepository.save(portfolio);
 
         return portfolio.getPortfolioId();
+    }
+
+    public PortfolioDTO.Res2 getPortfolioDetail(Long portfolioId) {
+        Portfolio portfolio = portfolioRepository.findById(portfolioId).orElse(null);
+
+        List<Skill> skillList = skillRepository.findAllByPortfolioId(portfolioId);
+        List<String> skillNameList = skillList.stream()
+                .map(Skill::getSkillName)
+                .toList();
+
+        List<Description> descriptionList = descriptionRepository.findAllByPortfolioId(portfolioId);
+        List<String> contextList = descriptionList.stream()
+                .map(Description::getContext)
+                .toList();
+
+        List<Image> imageList = imageRepository.findAllByPortfolioId(portfolioId);
+        List<String> imageURLs = imageList.stream()
+                .map(img -> awsS3Service.getFileUrl(img.getFileName()))
+                .toList();
+
+        PortfolioDTO.Res2 response =  PortfolioDTO.Res2.builder()
+                .title(portfolio.getTitle())
+                .skill(skillNameList)
+                .description(contextList)
+                .imageURL(imageURLs)
+                .build();
+
+        return response;
+
     }
 }

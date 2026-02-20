@@ -12,7 +12,7 @@ import pard.server.com.portfolioarchiveback.user.AuthorizeUserId;
 import java.util.List;
 
 @RestController
-@RequestMapping("/portfolio")
+@RequestMapping("/portfolios")
 @RequiredArgsConstructor
 public class PortfolioController {
     private final PortfolioService portfolioService;
@@ -20,10 +20,16 @@ public class PortfolioController {
     private final SkillService skillService;
     private final ImageService imageService;
 
-    @GetMapping("") //히어로섹션에서 보여줄 모든 갤러리와 갤러리 클릭시 나오는 제목
-    public ResponseEntity<List<PortfolioDTO.Res1>> getPortfolio() {
+    @GetMapping("hero") //히어로섹션에서 보여줄 모든 갤러리와 갤러리 클릭시 나오는 제목
+    public ResponseEntity<List<PortfolioDTO.Res1>> getPortfolios() {
         Long myId = AuthorizeUserId.getAuthorizedUserId();
-        List<PortfolioDTO.Res1> result = portfolioService.getPortfolio(myId);
+        List<PortfolioDTO.Res1> result = portfolioService.getPortfolios(myId);
+        return ResponseEntity.ok(result);
+    }
+
+    @GetMapping("detail") // 포폴 상세 페이지
+    public ResponseEntity<PortfolioDTO.Res2> getPortfolioDetail(@PathVariable Long portfolioId) {
+        PortfolioDTO.Res2 result = portfolioService.getPortfolioDetail(portfolioId);
         return ResponseEntity.ok(result);
     }
 
@@ -39,4 +45,6 @@ public class PortfolioController {
 
         return ResponseEntity.ok().build();
     }
+
+
 }

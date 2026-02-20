@@ -12,7 +12,7 @@ public class PortfolioDTO {
     @Builder
     @Getter
     @NoArgsConstructor
-    public static class Req1 { //
+    public static class Req1 { // 포폴 등록 post
         private String title;
         private List<String> description;
         private List<String> skill;
@@ -23,9 +23,20 @@ public class PortfolioDTO {
     @Builder
     @Getter
     @NoArgsConstructor
-    public static class Res1 { //
+    public static class Res1 { // 히어로섹션
+        private Long portfolioId;
         private String imageURL;
-
         private String title;
+    }
+
+    @AllArgsConstructor
+    @Builder
+    @Getter
+    @NoArgsConstructor
+    public static class Res2 { // 포폴 상세페이지
+        private String title;
+        private List<String> description;
+        private List<String> skill;
+        private List<String> imageURL;
     }
 }
