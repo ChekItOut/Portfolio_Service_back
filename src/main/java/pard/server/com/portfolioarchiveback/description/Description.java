@@ -14,5 +14,7 @@ public class Description {
 
     private Long portfolioId;
 
+    @Lob
+    @Column(columnDefinition = "LONGTEXT")
     private String context;
 }

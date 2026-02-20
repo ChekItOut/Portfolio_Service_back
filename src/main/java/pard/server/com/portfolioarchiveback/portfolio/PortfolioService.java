@@ -4,12 +4,14 @@ import org.springframework.stereotype.Service;
 import jakarta.transaction.Transactional;
 import pard.server.com.portfolioarchiveback.description.Description;
 import pard.server.com.portfolioarchiveback.description.DescriptionRepository;
+import pard.server.com.portfolioarchiveback.description.DescriptionService;
 import pard.server.com.portfolioarchiveback.image.Image;
 import pard.server.com.portfolioarchiveback.image.ImageRepository;
 import pard.server.com.portfolioarchiveback.image.ImageService;
 import pard.server.com.portfolioarchiveback.s3.AwsS3Service;
 import pard.server.com.portfolioarchiveback.skill.Skill;
 import pard.server.com.portfolioarchiveback.skill.SkillRepository;
+import pard.server.com.portfolioarchiveback.skill.SkillService;
 
 import java.util.List;
 
@@ -22,6 +24,8 @@ public class PortfolioService {
     private final DescriptionRepository descriptionRepository;
     private final ImageRepository imageRepository;
     private final AwsS3Service awsS3Service;
+    private final DescriptionService descriptionService;
+    private final SkillService skillService;
 
     public List<PortfolioDTO.Res1> getPortfolios(Long userId) { //히어로섹션 갤러리들 모두 리턴
         List<Portfolio> portfolios = portfolioRepository.findAllByUserId(userId);
@@ -45,7 +49,7 @@ public class PortfolioService {
         return portfolio.getPortfolioId();
     }
 
-    public PortfolioDTO.Res2 getPortfolioDetail(Long portfolioId) {
+    public PortfolioDTO.Res2 getPortfolioDetail(Long portfolioId) { //포폴 상세페이지 정보리턴
         Portfolio portfolio = portfolioRepository.findById(portfolioId).orElse(null);
 
         List<Skill> skillList = skillRepository.findAllByPortfolioId(portfolioId);
@@ -71,6 +75,17 @@ public class PortfolioService {
                 .build();
 
         return response;
+    }
 
+    @Transactional
+    public void updatePortfolioText(Long portfolioId, PortfolioDTO.Req2 request) {
+        Portfolio portfolio = portfolioRepository.findById(portfolioId).orElse(null);
+        portfolio.updateTitle(request.getTitle()); //제목 수정
+
+        descriptionService.deleteAll(portfolioId); //기존 포폴의 설명글 모두 삭제
+        descriptionService.save(portfolioId, request.getDescription()); //새로운 설명글들 저장
+
+        skillService.deleteAll(portfolioId); //기존 포폴의 스킬들 모두 삭제
+        skillService.save(portfolioId, request.getSkill());
     }
 }

@@ -16,4 +16,8 @@ public class Portfolio extends BaseEntity {
     private Long userId;
 
     private String title;
+
+    public void updateTitle(String title) {
+        this.title = title;
+    }
 }

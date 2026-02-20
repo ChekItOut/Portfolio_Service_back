@@ -2,6 +2,7 @@ package pard.server.com.portfolioarchiveback.description;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import jakarta.transaction.Transactional;
+import pard.server.com.portfolioarchiveback.portfolio.PortfolioDTO;
 
 import java.util.List;
 
@@ -18,5 +19,10 @@ public class DescriptionService {
                         .build())
                 .toList();
         descriptionRepository.saveAll(descriptions);
+    }
+
+    @Transactional
+    public void deleteAll(Long portfolioId) {
+        descriptionRepository.deleteAllByPortfolioId(portfolioId);
     }
 }

@@ -9,4 +9,6 @@ public interface ImageRepository extends JpaRepository<Image, Long> {
     Image findByPortfolioIdAndIsThumbnail(Long portfolioId, boolean isThumbnail);
 
     List<Image> findAllByPortfolioId(Long portfolioId);
+
+    void deleteByPortfolioId(Long portfolioId);
 }

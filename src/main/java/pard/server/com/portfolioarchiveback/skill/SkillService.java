@@ -20,4 +20,9 @@ public class SkillService {
                 .toList();
         skillRepository.saveAll(skills);
     }
+
+    @Transactional
+    public void deleteAll(Long portfolioId) {
+        skillRepository.deleteAllByPortfolioId(portfolioId);
+    }
 }

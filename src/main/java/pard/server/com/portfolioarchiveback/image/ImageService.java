@@ -40,4 +40,9 @@ public class ImageService {
 
         return awsS3Service.getFileUrl(image.getFileName());
     }
+
+    @Transactional
+    public void deleteImage(Long portfolioId) {
+        imageRepository.deleteByPortfolioId(portfolioId);
+    }
 }
