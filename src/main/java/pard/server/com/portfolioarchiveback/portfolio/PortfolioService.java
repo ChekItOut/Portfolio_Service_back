@@ -88,4 +88,16 @@ public class PortfolioService {
         skillService.deleteAll(portfolioId); //기존 포폴의 스킬들 모두 삭제
         skillService.save(portfolioId, request.getSkill());
     }
+
+    public void deletePortfolio(Long portfolioId) {
+        descriptionService.deleteAll(portfolioId);
+        skillService.deleteAll(portfolioId);
+
+        List<Image> imageList = imageRepository.findAllByPortfolioId(portfolioId);
+        imageList.forEach(image -> { //s3에서 모든 파일 삭제
+            awsS3Service.deleteFile(image.getFileName());
+        });
+
+        portfolioRepository.deleteById(portfolioId);
+    }
 }

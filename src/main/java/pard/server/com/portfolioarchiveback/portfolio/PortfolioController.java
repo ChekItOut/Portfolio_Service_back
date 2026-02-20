@@ -66,5 +66,9 @@ public class PortfolioController {
         return ResponseEntity.ok().build();
     }
 
-
+    @DeleteMapping("/{portfolioId}")
+    public ResponseEntity<Void> deletePortfolio(@PathVariable Long portfolioId) {
+        portfolioService.deletePortfolio(portfolioId);
+        return ResponseEntity.ok().build();
+    }
 }
