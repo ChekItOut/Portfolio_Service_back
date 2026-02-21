@@ -43,6 +43,7 @@ public class PortfolioDTO {
     @Getter
     @NoArgsConstructor
     public static class Res2 { // 포폴 상세페이지
+        private Long portfolioId;
         private String title;
         private List<String> description;
         private List<String> skill;

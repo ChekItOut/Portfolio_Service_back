@@ -72,6 +72,7 @@ public class PortfolioService {
                 .toList();
 
         PortfolioDTO.Res2 response =  PortfolioDTO.Res2.builder()
+                .portfolioId(portfolio.getPortfolioId())
                 .title(portfolio.getTitle())
                 .skill(skillNameList)
                 .description(contextList)
