@@ -1,5 +1,6 @@
 package pard.server.com.portfolioarchiveback.portfolio;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
@@ -36,7 +37,7 @@ public class PortfolioController {
 
     @PostMapping(value = "/posts", consumes = MediaType.MULTIPART_FORM_DATA_VALUE) //포폴 게시글 작성
     @Transactional
-    public ResponseEntity<?> createPortfolio( @RequestPart("request") PortfolioDTO.Req1 request, @RequestPart("images") List<MultipartFile> images) {
+    public ResponseEntity<PortfolioDTO.Res2> createPortfolio( @RequestPart("request") PortfolioDTO.Req1 request, @RequestPart("images") List<MultipartFile> images) {
         Long myId = AuthorizeUserId.getAuthorizedUserId();
 
         //포폴을 구성하는 각각의 구성요소들을 소분하여 저장
@@ -45,7 +46,11 @@ public class PortfolioController {
         skillService.save(portfolioId, request.getSkill()); //스킬 저장
         imageService.uploadImage(portfolioId, images); //사진들 업로드
 
-        return ResponseEntity.ok().build();
+        //생성된 포트폴리오 상세 정보 조회
+        PortfolioDTO.Res2 response = portfolioService.getPortfolioDetail(portfolioId);
+
+        //201 Created 상태 코드와 함께 응답 반환
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     @PatchMapping("/text/{portfolioId}") // 포트폴리오 수정에서 글자 기반 정보만 수정했을 때
