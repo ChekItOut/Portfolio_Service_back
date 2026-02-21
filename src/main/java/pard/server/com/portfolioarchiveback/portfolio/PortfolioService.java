@@ -1,5 +1,6 @@
 package pard.server.com.portfolioarchiveback.portfolio;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import jakarta.transaction.Transactional;
 import pard.server.com.portfolioarchiveback.description.Description;
@@ -14,7 +15,7 @@ import pard.server.com.portfolioarchiveback.skill.SkillRepository;
 import pard.server.com.portfolioarchiveback.skill.SkillService;
 
 import java.util.List;
-
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class PortfolioService {
@@ -29,11 +30,13 @@ public class PortfolioService {
 
     public List<PortfolioDTO.Res1> getPortfolios(Long userId) { //히어로섹션 갤러리들 모두 리턴
         List<Portfolio> portfolios = portfolioRepository.findAllByUserId(userId);
+        log.info(imageService.getThumbURL(portfolios.get(0).getPortfolioId()) + "사진 URL");
+        log.info(imageService.getThumbURL(portfolios.get(1).getPortfolioId()) + "사진 URL");
 
         return portfolios.stream().map(portfolio ->
                 PortfolioDTO.Res1.builder()
                         .portfolioId(portfolio.getPortfolioId())
-                        .imageURL(imageService.getThumbURL(portfolio.getPortfolioId())) //해당 포폴의 썸네일 추출
+                        .images(imageService.getThumbURL(portfolio.getPortfolioId())) //해당 포폴의 썸네일 추출
                         .title(portfolio.getTitle()) //제목 추출
                         .build())
                 .toList(); //모두 리스트로 담아서 리턴
@@ -72,7 +75,7 @@ public class PortfolioService {
                 .title(portfolio.getTitle())
                 .skill(skillNameList)
                 .description(contextList)
-                .imageURL(imageURLs)
+                .images(imageURLs)
                 .build();
 
         return response;

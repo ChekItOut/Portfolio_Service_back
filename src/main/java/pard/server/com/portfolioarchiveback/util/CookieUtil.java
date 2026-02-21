@@ -13,6 +13,17 @@ public class CookieUtil {
         Cookie cookie = new Cookie(name, value);
         cookie.setPath("/");
         cookie.setMaxAge(maxAge);
+
+        // 보안 설정
+        cookie.setHttpOnly(true);   // JavaScript 접근 차단 (XSS 방어)
+        // Secure 플래그는 HTTPS 환경에서만 전송 (프로덕션)
+        // 로컬 개발 환경에서는 HTTP 사용이므로 조건부 설정
+        String scheme = response.getHeader("X-Forwarded-Proto");
+        if ("https".equals(scheme) || System.getenv("ENVIRONMENT") != null && System.getenv("ENVIRONMENT").equals("production")) {
+            cookie.setSecure(true);
+        }
+        cookie.setAttribute("SameSite", "Lax"); // CSRF 방어
+
         response.addCookie(cookie);
     }
 
@@ -29,6 +40,20 @@ public class CookieUtil {
                 cookie.setValue("");
                 cookie.setPath("/");
                 cookie.setMaxAge(0);
+
+                // 보안 속성 추가 (addCookie와 동일한 로직)
+                cookie.setHttpOnly(true);
+
+                // Secure 플래그 조건부 설정
+                String scheme = response.getHeader("X-Forwarded-Proto");
+                if ("https".equals(scheme) ||
+                    System.getenv("ENVIRONMENT") != null &&
+                    System.getenv("ENVIRONMENT").equals("production")) {
+                    cookie.setSecure(true);
+                }
+
+                cookie.setAttribute("SameSite", "Lax");
+
                 response.addCookie(cookie);
             }
         }

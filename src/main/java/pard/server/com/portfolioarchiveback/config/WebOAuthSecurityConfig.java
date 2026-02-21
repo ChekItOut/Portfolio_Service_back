@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.boot.security.autoconfigure.web.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
@@ -71,6 +72,7 @@ public class WebOAuthSecurityConfig {
                         // ✅ 2) “로그인 없이 허용”하려는 API들
                         .requestMatchers(apiToken).permitAll()
                         .requestMatchers(swaggerUi, swaggerHtml, apiDocs).permitAll() //스웨거 허용
+                        .requestMatchers(HttpMethod.DELETE, "/api/refresh-token").permitAll()
                         // ✅ 3) 그 외 전부 인증 필요
                         .anyRequest().authenticated()
                 )

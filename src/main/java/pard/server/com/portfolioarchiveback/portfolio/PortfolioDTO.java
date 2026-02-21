@@ -34,7 +34,7 @@ public class PortfolioDTO {
     @NoArgsConstructor
     public static class Res1 { // 히어로섹션
         private Long portfolioId;
-        private String imageURL;
+        private String images;
         private String title;
     }
 
@@ -46,6 +46,6 @@ public class PortfolioDTO {
         private String title;
         private List<String> description;
         private List<String> skill;
-        private List<String> imageURL;
+        private List<String> images;
     }
 }

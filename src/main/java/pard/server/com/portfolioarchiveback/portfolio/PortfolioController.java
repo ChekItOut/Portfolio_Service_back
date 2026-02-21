@@ -2,6 +2,7 @@ package pard.server.com.portfolioarchiveback.portfolio;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import pard.server.com.portfolioarchiveback.description.DescriptionService;
@@ -34,6 +35,7 @@ public class PortfolioController {
     }
 
     @PostMapping(value = "/posts", consumes = MediaType.MULTIPART_FORM_DATA_VALUE) //포폴 게시글 작성
+    @Transactional
     public ResponseEntity<?> createPortfolio( @RequestPart("request") PortfolioDTO.Req1 request, @RequestPart("images") List<MultipartFile> images) {
         Long myId = AuthorizeUserId.getAuthorizedUserId();
 
