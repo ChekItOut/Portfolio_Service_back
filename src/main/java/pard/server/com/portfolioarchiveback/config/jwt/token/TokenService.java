@@ -21,6 +21,12 @@ public class TokenService {
     //리프레시 토큰을 전달받음
     public String createNewAccessToken(String refreshToken) {
         if(!tokenProvider.validToken(refreshToken)) { //유효성 체크
+            // 만료된 토큰을 DB에서도 삭제 (만료된 토큰 즉시 정리)
+            try {
+                refreshTokenService.deleteByRefreshToken(refreshToken);
+            } catch (Exception e) {
+                // 이미 삭제되었거나 존재하지 않는 경우 무시
+            }
             throw new IllegalArgumentException("Unexpected token");
         }
 

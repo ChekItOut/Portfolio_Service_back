@@ -18,6 +18,7 @@ import pard.server.com.portfolioarchiveback.util.CookieUtil;
 
 import java.io.IOException;
 import java.time.Duration;
+import java.time.LocalDateTime;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -42,7 +43,8 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
 
         //Refresh Token 발급 → DB 저장 → 쿠키 저장
         String refreshToken = tokenProvider.generateToken(user, REFRESH_TOKEN_DURATION);
-        saveRefreshToken(user.getUserId(), refreshToken); //DB에 “이 유저의 refresh 토큰” 저장(또는 갱신)
+        LocalDateTime expiryDate = LocalDateTime.now().plus(REFRESH_TOKEN_DURATION);
+        saveRefreshToken(user.getUserId(), refreshToken, expiryDate); //DB에 "이 유저의 refresh 토큰" 저장(또는 갱신)
         addRefreshTokenToCookie(request, response, refreshToken); //브라우저에 HttpOnly 쿠키로 refresh 토큰 저장
 
         //인증 관련 설정값, 쿠키 제거 = OAuth2 로그인 과정 중 사용했던 “인증 관련 임시 데이터”를 삭제
@@ -55,10 +57,10 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
     }
 
     //생성된 리프레시 토큰을 전달받아 DB에 저장
-    private void saveRefreshToken(Long userId, String newRefreshToken) {
+    private void saveRefreshToken(Long userId, String newRefreshToken, LocalDateTime expiryDate) {
         RefreshToken refreshToken = refreshTokenRepository.findByUserId(userId)
-                .map(entity -> entity.update(newRefreshToken))
-                .orElse(new RefreshToken(userId, newRefreshToken));
+                .map(entity -> entity.update(newRefreshToken, expiryDate))
+                .orElse(new RefreshToken(userId, newRefreshToken, expiryDate));
 
         refreshTokenRepository.save(refreshToken);
     }
