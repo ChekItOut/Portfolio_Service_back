@@ -31,7 +31,6 @@ public class PortfolioService {
     public List<PortfolioDTO.Res1> getPortfolios(Long userId) { //히어로섹션 갤러리들 모두 리턴
         List<Portfolio> portfolios = portfolioRepository.findAllByUserId(userId);
         log.info(imageService.getThumbURL(portfolios.get(0).getPortfolioId()) + "사진 URL");
-        log.info(imageService.getThumbURL(portfolios.get(1).getPortfolioId()) + "사진 URL");
 
         return portfolios.stream().map(portfolio ->
                 PortfolioDTO.Res1.builder()

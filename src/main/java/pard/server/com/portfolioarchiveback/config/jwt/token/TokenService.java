@@ -35,6 +35,6 @@ public class TokenService {
         User user = userService.findById(userId);
 
         //찾은 유저로 새로운 AccessToken 생성
-        return tokenProvider.generateToken(user, Duration.ofHours(2));
+        return tokenProvider.generateToken(user, Duration.ofMinutes(15));//AccessToken 만료 기간설정
     }
 }
