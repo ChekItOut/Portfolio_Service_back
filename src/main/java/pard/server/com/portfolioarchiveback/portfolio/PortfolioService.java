@@ -35,7 +35,7 @@ public class PortfolioService {
         return portfolios.stream().map(portfolio ->
                 PortfolioDTO.Res1.builder()
                         .portfolioId(portfolio.getPortfolioId())
-                        .images(imageService.getThumbURL(portfolio.getPortfolioId())) //해당 포폴의 썸네일 추출
+                        .images(List.of(imageService.getThumbURL(portfolio.getPortfolioId()))) //해당 포폴의 썸네일 추출 후 리스트로 래핑
                         .title(portfolio.getTitle()) //제목 추출
                         .build())
                 .toList(); //모두 리스트로 담아서 리턴

@@ -36,10 +36,10 @@ public class ImageService {
     }
 
     public String getThumbURL(Long portfolioId) {
-        Image image = imageRepository.findByPortfolioIdAndIsThumbnail(portfolioId, true)
-                .orElseThrow(() -> new RuntimeException("Thumbnail image not found for portfolio id: " + portfolioId));
-
-        return awsS3Service.getFileUrl(image.getFileName());
+        // 썸네일이 없는 경우 500 에러 대신 빈 문자열 반환하여 프론트엔드가 디폴트 이미지 표시하도록 함
+        return imageRepository.findByPortfolioIdAndIsThumbnail(portfolioId, true)
+                .map(image -> awsS3Service.getFileUrl(image.getFileName()))
+                .orElse("");
     }
 
     @Transactional
