@@ -22,7 +22,7 @@ public class RefreshTokenCleanupScheduler {
      * 매일 새벽 3시에 만료된 RefreshToken 삭제
      * cron: "초 분 시 일 월 요일"
      */
-    @Scheduled(cron = "0 0 3 * * *")
+    @Scheduled(cron = "0 0 3 * * *", zone = "Asia/Seoul")
     @Transactional
     public void deleteExpiredTokens() {
         log.info("RefreshToken 정리 시작...");
